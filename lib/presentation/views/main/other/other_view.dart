@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constant/images.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../blocs/cart/cart_bloc.dart';
+import '../../../blocs/theme/theme_change_bloc.dart';
 import '../../../blocs/user/user_bloc.dart';
 import '../../../widgets/other_item_card.dart';
 
@@ -91,6 +92,22 @@ class OtherView extends StatelessWidget {
                 }
               },
             ),
+          ),
+          const SizedBox(height: 30),
+          BlocBuilder<ThemeChangeBloc, ThemeMode>(
+            builder: (context, state) {
+              return SwitchListTile(
+                title: Text("Dark Theme"),
+                value: context.read<ThemeChangeBloc>().state == ThemeMode.dark,
+                onChanged: (value) {
+                  print(value);
+                  print("Theme ${state}");
+                  context.read<ThemeChangeBloc>().add(
+                        ThemeChanged(isDark: value),
+                      );
+                },
+              );
+            }
           ),
           const SizedBox(height: 30),
           BlocBuilder<UserBloc, UserState>(

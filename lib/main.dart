@@ -1,3 +1,4 @@
+import 'package:eshop/presentation/blocs/theme/theme_change_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:oktoast/oktoast.dart';
@@ -37,6 +38,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => NavbarCubit(),
         ),
+        BlocProvider<ThemeChangeBloc>(
+          create: (context) => ThemeChangeBloc(),
+        ),
         BlocProvider(
           create: (context) => FilterCubit(),
         ),
@@ -58,21 +62,28 @@ class MyApp extends StatelessWidget {
           create: (context) => di.sl<DeliveryInfoActionCubit>(),
         ),
         BlocProvider(
-          create: (context) => di.sl<DeliveryInfoFetchCubit>()..fetchDeliveryInfo(),
+          create: (context) =>
+              di.sl<DeliveryInfoFetchCubit>()..fetchDeliveryInfo(),
         ),
         BlocProvider(
           create: (context) => di.sl<OrderFetchCubit>()..getOrders(),
         ),
       ],
-      child: OKToast(
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          initialRoute: AppRouter.home,
-          onGenerateRoute: AppRouter.onGenerateRoute,
-          title: appTitle,
-          theme: AppTheme.lightTheme,
-          builder: EasyLoading.init(),
-        ),
+      child: BlocBuilder<ThemeChangeBloc, ThemeMode>(
+        builder: (context, state) {
+          return OKToast(
+              child: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                initialRoute: AppRouter.home,
+                onGenerateRoute: AppRouter.onGenerateRoute,
+                title: appTitle,
+                theme: AppTheme.lightTheme,
+                darkTheme: AppTheme.darkTheme,
+                themeMode: state,
+                builder: EasyLoading.init(),
+              ),
+            );
+        }
       ),
     );
   }
